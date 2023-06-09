@@ -1,8 +1,10 @@
 package vttp2023.batch3.ssf.frontcontroller.controllers;
 
+import java.io.IOException;
 import java.net.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,7 +38,12 @@ public class FrontController {
 			return "view0";
 		}
 		m.addAttribute("login", login);
-		aSvc.authenticate(login.getUsername(),login.getPassword());
+		try{
+			ResponseEntity resp = aSvc.authenticate(login.getUsername(),login.getPassword());
+		} catch (IOException e){
+			//will throw IOException if any 4xx error response sent. 
+			
+		}
 		
 
 		return "view1";
