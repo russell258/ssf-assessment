@@ -6,6 +6,7 @@ import java.io.StringReader;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -20,6 +21,10 @@ public class Login implements Serializable{
     private String password;
 
     private int fAttempt = 0;
+
+    private boolean isAuth=false;
+
+    
 
     public int getfAttempt() {
         return fAttempt;
@@ -65,6 +70,14 @@ public class Login implements Serializable{
             .add("username",username)
             .add("password",password)
             .build();
+    }
+
+    public boolean isAuth() {
+        return isAuth;
+    }
+
+    public void setAuth(boolean isAuth) {
+        this.isAuth = isAuth;
     }
 
 }

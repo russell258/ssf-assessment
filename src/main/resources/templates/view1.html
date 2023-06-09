@@ -12,11 +12,10 @@
 		<div style="margin-bottom: 10px;">
 			<img src="/polar_bear.png" height="300">
 		</div>
-
-		<div>
-			<!-- Log OUT THIS -->
-			<button type = "submit" formMethod="GET" formaction="/">Logout</button>
-		</div>
-		
+		<form method = "GET" action="/" data-th-object="${login}">
+			<div>
+				<button type = "submit">Logout</button>
+			</div>
+		</form>	
 	</body>
 </html>

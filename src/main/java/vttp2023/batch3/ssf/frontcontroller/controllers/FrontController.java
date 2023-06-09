@@ -30,49 +30,66 @@ public class FrontController {
 	@GetMapping(path="/")
 	public String showLoginPage(Model m, Login login, HttpSession session){
 		// m.addAttribute("login", new Login());
+
+		//set authentication to false whenever entering landing page so user is unauthenticated when logging out from view 1.
+		login.setAuth(false);
 		return "view0";
 	}
 
 	@PostMapping(path="/login", consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public String validateLogin(Model m, @Valid Login login, HttpSession session, BindingResult result) throws Exception{
+	public String validateLogin(Model m, @Valid Login login, Captcha c, BindingResult result) throws Exception{
 		if (result.hasErrors()){
 			return "view0";
 		}
+
 		m.addAttribute("login", login);
 		try{
 			aSvc.authenticate(login.getUsername(),login.getPassword());
 		} catch (HttpClientErrorException e){
-			//catch if 401 error response sent. 
-			if (e.getStatusCode()==HttpStatusCode.valueOf(401)){
+			//catch if 401 error response sent, login attempt <3, user is currently not disabled
+			//if condition should also aSvc.checkCaptcha(first,second,op, answer) whether answer == first {op} second but 
+			//getting syntax error in thymeleaf 
+			if (e.getStatusCode()==HttpStatusCode.valueOf(401)
+				|| login.getfAttempt()<3
+				|| aSvc.checkDisableService(login.getUsername()).isEmpty()){
 				//increase attempt count by 1.
 				login.increaseAttempt();
 				//add login fail message and generate captchaservice
 				m.addAttribute("loginFail", "Incorrect username/password");
-				Captcha c = aSvc.generateCaptchaService();
+				c = aSvc.generateCaptchaService();
 				m.addAttribute("captcha", c);
+				
 				return "view0";
+			}else{
+				aSvc.disableUser(login.getUsername());
+				return "view2";
 			}
-			// HttpStatusCode status  = aSvc.authenticate(login.getUsername(), login.getPassword()).getStatusCode();
-			// System.out.println("checking STATUS >>>> " + status);
 		}catch (HttpStatusCodeException e){
-			//catch if 400 error response sent
-			if (e.getStatusCode()==HttpStatusCode.valueOf(400)){
+			//catch if 400 error response sent, login attempt <3, user is currently not disabled
+			if (e.getStatusCode()==HttpStatusCode.valueOf(400) 
+				|| login.getfAttempt()<3 
+				|| aSvc.checkDisableService(login.getUsername()).isEmpty()){
 				//increase attempt count by 1.
 				login.increaseAttempt();
 				//add login fail message and generate captchaservice
 				m.addAttribute("loginFail", "Invalid payload");
-				Captcha c = aSvc.generateCaptchaService();
+				c = aSvc.generateCaptchaService();
 				m.addAttribute("captcha", c);
+				
 				return "view0";
+			}else{
+				aSvc.disableUser(login.getUsername());
+				return "view2";
 			}
 		}
-		
 
+		//on successful login, reset the fail attempts to 0
+		login.setfAttempt(0);
+
+		//on successful login, set authenticated to true
+		login.setAuth(true);
 		return "view1";
 	}
-
-	// TODO: Task 2, Task 3, Task 4, Task 6
-	
 
 }
 

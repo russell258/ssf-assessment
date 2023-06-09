@@ -1,7 +1,9 @@
 package vttp2023.batch3.ssf.frontcontroller.services;
 
+import java.util.Optional;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +12,13 @@ import org.springframework.web.client.RestTemplate;
 
 import vttp2023.batch3.ssf.frontcontroller.model.Captcha;
 import vttp2023.batch3.ssf.frontcontroller.model.Login;
+import vttp2023.batch3.ssf.frontcontroller.respositories.AuthenticationRepository;
 
 @Service
 public class AuthenticationService {
 
+	@Autowired
+	private AuthenticationRepository repository;
 	// TODO: Task 2 
 	// DO NOT CHANGE THE METHOD'S SIGNATURE
 	// Write the authentication method in here
@@ -37,8 +42,37 @@ public class AuthenticationService {
 	// DO NOT CHANGE THE METHOD'S SIGNATURE
 	// Write an implementation to disable a user account for 30 mins
 	public void disableUser(String username) {
-		
+		repository.disable(username);
 	}
+
+	public Optional<String> checkDisableService(String username){
+		return this.repository.checkDisable(username);
+	}
+
+	// commenting out checkCaptcha as getting syntax parse error in thymeleaf
+	
+	// public boolean checkCaptcha(int first, int second, char op, int answer){
+	// 	int captchaAns = 0;
+	// 	switch(op){
+	// 		case '*':
+	// 			captchaAns = first*second;
+	// 			break;
+	// 		case '+':
+	// 			captchaAns = first + second;
+	// 			break;
+	// 		case '-':
+	// 			captchaAns = first - second;
+	// 			break;
+	// 		case '/':
+	// 			captchaAns = first/second;
+	// 			break;
+	// 	}
+	// 	if (captchaAns == answer){
+	// 		return true;
+	// 	}else{
+	// 		return false;
+	// 	}
+	// }
 
 	//generate captcha with  2 random int and operator
 	public Captcha generateCaptchaService(){
