@@ -1,19 +1,14 @@
 package vttp2023.batch3.ssf.frontcontroller.controllers;
 
+import java.net.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.client.RestTemplate;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -30,17 +25,36 @@ public class FrontController {
 
 	//task 1 set landing page
 	@GetMapping(path="/")
-	public String showLoginPage(Model m){
-		m.addAttribute("login", new Login());
+	public String showLoginPage(Model m, Login login, HttpSession session){
+		// m.addAttribute("login", new Login());
 		return "view0";
 	}
 
 	@PostMapping(path="/login", consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-	public String postLoginPage(Model m, @Valid Login login, BindingResult result){
+	public String validateLogin(Model m, @Valid Login login, HttpSession session, BindingResult result) throws Exception{
 		if (result.hasErrors()){
 			return "view0";
 		}
-		m.getAttribute("username");
+		m.addAttribute("login", login);
+		aSvc.authenticate(login.getUsername(),login.getPassword());
+		
+
+		return "view1";
+	}
+
+	@PostMapping(path="/api/authenticate", 
+				produces = MediaType.APPLICATION_JSON_VALUE, 
+				consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void authenticateLogin(HttpRequest request, Login login){
+		
+	}
+
+	// TODO: Task 2, Task 3, Task 4, Task 6
+	
+
+}
+
+
 		// MultiValueMap<String,String> form = new LinkedMultiValueMap<>();
 		// form.add("username", login.getUsername());
 		// form.add("password", login.getPassword());
@@ -50,10 +64,3 @@ public class FrontController {
 		// RestTemplate template = new RestTemplate();
 
 		// ResponseEntity<String> resp = template.exchange(req,String.class);
-		return "view1";
-	}
-
-	// TODO: Task 2, Task 3, Task 4, Task 6
-	
-
-}

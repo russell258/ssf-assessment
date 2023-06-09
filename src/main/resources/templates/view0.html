@@ -18,22 +18,22 @@
 					<label for="username">Username:</label> 
 				</td>
 				<td>
-					<input type="text" id="username" size="30" 
+					<input type="text" id="username" size="30" data-th-field = "*{username}"
 							placeholder="Please type in your username" >
+					<span data-th-errorClass = "error" data-th-if = "${#fields.hasErrors('username')}" data-th-errors = "*{username}" style="color: red
+					;"></span><br/>
 				</td>
-				<span data-th-errorClass = "error" data-th-if = "${#fields.hasErrors('username')}" data-th-errors = "*{username}" style="color: red
-				;"></span><br/>
 			</tr>
 			<tr>
 				<td>
 					<label for="password">Password:</label>
 				</td>
 				<td>
-					<input type="password" id="password" size="30" 
+					<input type="password" id="password" size="30" data-th-field = "*{password}"
 							placeholder="Please type in your password">
+					<span data-th-errorClass = "error" data-th-if = "${#fields.hasErrors('password')}" data-th-errors = "*{password}" style="color: red
+					;"></span>		
 				</td>
-				<span data-th-errorClass = "error" data-th-if = "${#fields.hasErrors('password')}" data-th-errors = "*{password}" style="color: red
-				;"></span>
 			</tr>
 			<tr>
 				<td></td>
