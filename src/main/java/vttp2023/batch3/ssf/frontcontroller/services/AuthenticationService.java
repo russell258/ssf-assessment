@@ -1,12 +1,14 @@
 package vttp2023.batch3.ssf.frontcontroller.services;
 
-import org.springframework.http.HttpStatus;
+import java.util.Random;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import vttp2023.batch3.ssf.frontcontroller.model.Captcha;
 import vttp2023.batch3.ssf.frontcontroller.model.Login;
 
 @Service
@@ -35,7 +37,27 @@ public class AuthenticationService {
 	// DO NOT CHANGE THE METHOD'S SIGNATURE
 	// Write an implementation to disable a user account for 30 mins
 	public void disableUser(String username) {
+		
 	}
+
+	//generate captcha with  2 random int and operator
+	public Captcha generateCaptchaService(){
+		Random r = new Random();
+		Captcha c = new Captcha();
+		//random.nextInt(max - min + 1) + min
+		c.setFirst(r.nextInt(50 - 1 + 1) + 1);
+		c.setSecond(r.nextInt(50 - 1 + 1) + 1);
+		c.setOp(capOp[(r.nextInt(4))]);
+		return c;
+	}
+
+	//math operations for captcha
+	public static final char[] capOp = {
+        '+',
+        '-',
+        '*',
+		'/',
+    };
 
 	// TODO: Task 5
 	// DO NOT CHANGE THE METHOD'S SIGNATURE

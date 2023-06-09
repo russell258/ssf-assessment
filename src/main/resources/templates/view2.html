@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deactivated for 30 minutes</title>
+</head>
+<body>
+    <form method="GET" data-th-object="${login}">
+        <label for="deactivation">Your login </label> 
+        <p data-th-field = "*{username}"></p>
+        <label for="deactivation"> has been deactivated for 30 mins</label>
+        <button type = "submit" formaction="/">Back</button>
+    </form>
+
+</body>
+</html>

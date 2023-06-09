@@ -29,6 +29,7 @@ public class Login implements Serializable{
         this.fAttempt = fAttempt;
     }
 
+    //increase attempt when fail
     public void increaseAttempt(){
         this.fAttempt++;
     }

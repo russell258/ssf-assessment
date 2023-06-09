@@ -1,6 +1,5 @@
 package vttp2023.batch3.ssf.frontcontroller.controllers;
 
-import java.net.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -11,9 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import vttp2023.batch3.ssf.frontcontroller.model.Captcha;
 import vttp2023.batch3.ssf.frontcontroller.model.Login;
 import vttp2023.batch3.ssf.frontcontroller.services.AuthenticationService;
 
@@ -41,25 +42,33 @@ public class FrontController {
 		try{
 			aSvc.authenticate(login.getUsername(),login.getPassword());
 		} catch (HttpClientErrorException e){
-			//will throw IOException if 400 or 401 error response sent. 
-			if (e.getStatusCode()==HttpStatusCode.valueOf(401) || e.getStatusCode()==HttpStatusCode.valueOf(400)){
+			//catch if 401 error response sent. 
+			if (e.getStatusCode()==HttpStatusCode.valueOf(401)){
 				//increase attempt count by 1.
 				login.increaseAttempt();
+				//add login fail message and generate captchaservice
+				m.addAttribute("loginFail", "Incorrect username/password");
+				Captcha c = aSvc.generateCaptchaService();
+				m.addAttribute("captcha", c);
 				return "view0";
 			}
 			// HttpStatusCode status  = aSvc.authenticate(login.getUsername(), login.getPassword()).getStatusCode();
 			// System.out.println("checking STATUS >>>> " + status);
+		}catch (HttpStatusCodeException e){
+			//catch if 400 error response sent
+			if (e.getStatusCode()==HttpStatusCode.valueOf(400)){
+				//increase attempt count by 1.
+				login.increaseAttempt();
+				//add login fail message and generate captchaservice
+				m.addAttribute("loginFail", "Invalid payload");
+				Captcha c = aSvc.generateCaptchaService();
+				m.addAttribute("captcha", c);
+				return "view0";
+			}
 		}
 		
 
 		return "view1";
-	}
-
-	@PostMapping(path="/api/authenticate", 
-				produces = MediaType.APPLICATION_JSON_VALUE, 
-				consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void authenticateLogin(HttpRequest request, Login login){
-		
 	}
 
 	// TODO: Task 2, Task 3, Task 4, Task 6

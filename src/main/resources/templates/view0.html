@@ -36,7 +36,18 @@
 				</td>
 			</tr>
 			<tr>
-				<td></td>
+				<td>
+					<p th:if = "${loginFail!=null}" th:object = "${captcha}" style="color:red">
+						What is 17 + 14?
+						<br>
+						<!-- commenting as unable to get thymeleaf syntax to work -->
+						<!-- <td th:object="${captcha}" th:field="*{first}"></td>
+						<td th:object="${captcha}" th:field="*{op}"></td>
+						<td th:object="${captcha}" th:field="*{second}">?</td> -->
+						Answer: <input type="answer" id="answer" size="30" data-th-field = "*{answer}" placeholder="Answer">
+					</p>
+					<br>
+				</td>
 				<td>
 					<button type="submit">Login</button>
 				</td>
