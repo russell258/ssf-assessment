@@ -9,7 +9,7 @@
 		<title>Login</title>
 	</head>
 	<body>
-
+		<form method = "POST" data-th-action="@{/login}" data-th-object="${login}">
 		<h2>Please Login</h2>
 
 		<table>
@@ -21,6 +21,8 @@
 					<input type="text" id="username" size="30" 
 							placeholder="Please type in your username" >
 				</td>
+				<span data-th-errorClass = "error" data-th-if = "${#fields.hasErrors('username')}" data-th-errors = "*{username}" style="color: red
+				;"></span><br/>
 			</tr>
 			<tr>
 				<td>
@@ -30,14 +32,17 @@
 					<input type="password" id="password" size="30" 
 							placeholder="Please type in your password">
 				</td>
+				<span data-th-errorClass = "error" data-th-if = "${#fields.hasErrors('password')}" data-th-errors = "*{password}" style="color: red
+				;"></span>
 			</tr>
 			<tr>
 				<td></td>
 				<td>
-					<button>Login</button>
+					<button type="submit">Login</button>
 				</td>
 			</tr>
 		</table>
+		</form>
 		
 	</body>
 </html>

@@ -1,5 +1,15 @@
 package vttp2023.batch3.ssf.frontcontroller.services;
 
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+import vttp2023.batch3.ssf.frontcontroller.model.Login;
+
+@Service
 public class AuthenticationService {
 
 	// TODO: Task 2
