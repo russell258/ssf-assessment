@@ -21,6 +21,18 @@ public class Login implements Serializable{
 
     private int fAttempt = 0;
 
+    public int getfAttempt() {
+        return fAttempt;
+    }
+
+    public void setfAttempt(int fAttempt) {
+        this.fAttempt = fAttempt;
+    }
+
+    public void increaseAttempt(){
+        this.fAttempt++;
+    }
+
     public Login(
             @NotNull(message = "Username cannot be empty") @Size(min = 2, message = "Username must be at least 2 characters") String username,
             @NotNull(message = "Password cannot be empty") @Size(min = 2, message = "Password must be at least 2 characters") String password) {

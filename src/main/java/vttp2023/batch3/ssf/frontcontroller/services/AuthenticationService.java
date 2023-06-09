@@ -24,7 +24,7 @@ public class AuthenticationService {
 									.header("Accept",MediaType.APPLICATION_JSON_VALUE)
 									.body(login.toJSON().toString(),String.class);
 
-		System.out.println("CHECKING THE REQUEST BUILT >>>>> " +req);
+		System.out.println("CHECKING THE REQUEST BUILT >>>>> " + req);
 		RestTemplate template = new RestTemplate();
 		ResponseEntity<String> resp = template.exchange(req,String.class);
 		System.out.println("CHECK THE RESPONSE SENT >>>> " + resp);

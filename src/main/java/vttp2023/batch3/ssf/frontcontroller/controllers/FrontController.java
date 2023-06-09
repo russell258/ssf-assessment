@@ -1,16 +1,16 @@
 package vttp2023.batch3.ssf.frontcontroller.controllers;
 
-import java.io.IOException;
 import java.net.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpClientErrorException;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -39,10 +39,16 @@ public class FrontController {
 		}
 		m.addAttribute("login", login);
 		try{
-			ResponseEntity resp = aSvc.authenticate(login.getUsername(),login.getPassword());
-		} catch (IOException e){
-			//will throw IOException if any 4xx error response sent. 
-			
+			aSvc.authenticate(login.getUsername(),login.getPassword());
+		} catch (HttpClientErrorException e){
+			//will throw IOException if 400 or 401 error response sent. 
+			if (e.getStatusCode()==HttpStatusCode.valueOf(401) || e.getStatusCode()==HttpStatusCode.valueOf(400)){
+				//increase attempt count by 1.
+				login.increaseAttempt();
+				return "view0";
+			}
+			// HttpStatusCode status  = aSvc.authenticate(login.getUsername(), login.getPassword()).getStatusCode();
+			// System.out.println("checking STATUS >>>> " + status);
 		}
 		
 
